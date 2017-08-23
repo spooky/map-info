@@ -1,4 +1,6 @@
 import sys
+import os
+import os.path
 
 from PyQt5.QtCore import Qt, QCoreApplication, QUrl
 from PyQt5.QtGui import QGuiApplication
@@ -22,6 +24,7 @@ def start_ui(argv):
     image_provider = HeatmapProvider()
     engine.addImageProvider('heatmap', image_provider)
 
+    os.chdir(os.path.dirname(__file__))
     engine.load(QUrl('ui/main.qml'))
 
     mainViewModel.map_size = 10
