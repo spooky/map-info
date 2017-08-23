@@ -75,7 +75,7 @@ class MainViewModel(QObject):
         map_dir = QDir(url.toLocalFile()).path()
         self.map_info = get_map_info(map_dir)
         self.map_size = round(max(self.map_info.size.w, self.map_info.size.h))
-        self.map_name = self.map_info.name
+        self.map_name = '{} ({}x{})'.format(self.map_info.name, self.map_info.size.w, self.map_info.size.h)
         self.dot_size = self._get_dot_size()
 
     def _get_dot_size(self):
