@@ -60,7 +60,8 @@ ApplicationWindow {
             Layout.fillWidth: true
 
             IconButton {
-                text: "Open"
+                text: "Open map folder"
+                icon: "open.svg"
                 onClicked: { fileDialog.open() }
             }
 
@@ -94,11 +95,13 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             IconButton {
-                text: "H Mirror"
+                text: "Mirror"
+                icon: "mirror.svg"
                 onClicked: { heatmapImage.mirror = !heatmapImage.mirror }
             }
             IconButton {
-                text: "V Mirror"
+                text: "Flip"
+                icon: "flip.svg"
                 onClicked: { mainViewModel.flip = !mainViewModel.flip }
             }
         }
