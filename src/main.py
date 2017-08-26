@@ -10,10 +10,32 @@ from providers import HeatmapProvider
 from view_models import MainViewModel
 
 
+def cleanUp(obj):
+    for i in obj.__dict__:
+        item = obj.__dict__[i]
+        clean(item)
+
+
+def clean(item):
+    """Clean up the memory by closing and deleting the item if possible."""
+    if isinstance(item, list) or isinstance(item, dict):
+        for _ in range(len(item)):
+            clean(list(item).pop())
+    else:
+        try:
+            item.close()
+        except (RuntimeError, AttributeError):  # deleted or no close method
+            pass
+        try:
+            item.deleteLater()
+        except (RuntimeError, AttributeError):  # deleted or no deleteLater method
+            pass
+
+
 def start_ui(argv):
     QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
 
-    app = QGuiApplication(sys.argv)
+    app = QGuiApplication(argv)
     engine = QQmlApplicationEngine()
 
     mainViewModel = MainViewModel()
@@ -27,7 +49,7 @@ def start_ui(argv):
     os.chdir(os.path.dirname(__file__))
     engine.load(QUrl('ui/main.qml'))
 
-    mainViewModel.map_size = 10
+    app.aboutToQuit.connect(lambda: cleanUp(app))
 
     if not engine.rootObjects():
         return -1
