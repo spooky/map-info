@@ -12,11 +12,7 @@ ApplicationWindow {
 
     Shortcut {
         sequence: "Ctrl+Q"
-        onActivated: {
-            // fileDialog.close()
-            // mainWindow.close()
-            Qt.quit()
-        }
+        onActivated: { Qt.quit() }
     }
 
     Shortcut {
