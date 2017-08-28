@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
+import QtGraphicalEffects 1.0
 
 ApplicationWindow {
     id: mainWindow
@@ -37,17 +38,37 @@ ApplicationWindow {
         rows: 2
         columns: 2
 
-        Image {
-            id: heatmapImage
-            source: mainViewModel.map_dir ? "image://heatmap/" + mainViewModel.map_dir + "?dot_size=" + dotSizeSlider.value + "&flip=" + mainViewModel.flip : ""
-            fillMode: Image.PreserveAspectFit
-            opacity: opacitySlider.value
-
+        StackLayout {
             Layout.row: 1
             Layout.column: 1
             Layout.columnSpan: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            Blend {
+                anchors.fill: parent
+                cached: false
+                source: previewImage
+                foregroundSource: heatmapImage
+                mode: "normal"
+                antialiasing: true
+                smooth: true
+            }
+            Image {
+                id: heatmapImage
+                anchors.fill: parent
+                source: mainViewModel.map_dir ? "image://heatmap/" + mainViewModel.map_dir + "?dot_size=" + dotSizeSlider.value + "&flip=" + mainViewModel.flip : ""
+                fillMode: Image.PreserveAspectFit
+                opacity: opacitySlider.value
+                visible: false
+            }
+            Image {
+                id: previewImage
+                anchors.fill: parent
+                source: mainViewModel.preview ? mainViewModel.preview : ""
+                fillMode: Image.PreserveAspectFit
+                visible: false
+            }
         }
 
         RowLayout {

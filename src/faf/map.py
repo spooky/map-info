@@ -1,4 +1,5 @@
 import os
+import glob
 
 from tools.lua_map_helper import parse_lua, get_name, get_size, get_markers
 
@@ -7,11 +8,15 @@ class MapInfo():
     name = None
     size = None
     mass_markers = []
+    map_dir = None
+    preview = None
 
     def __init__(self, *args, **kwargs):
         self.name = kwargs.pop('name', None)
         self.size = kwargs.pop('size', None)
         self.mass_markers = kwargs.pop('mass_markers', None)
+        self.map_dir = kwargs.pop('map_dir', None)
+        self.preview = kwargs.pop('preview', None)
 
     def __repr__(self):
         return '<{}.{} "{}" {}x{}, {} mex>'.format(self.__class__.__module__, self.__class__.__name__,
@@ -33,4 +38,7 @@ def get_map_info(map_dir):
         size = get_size(lua)
         mass_markers = [m for m in get_markers(lua)]
 
-    return MapInfo(name=name, size=size, mass_markers=mass_markers)
+    pics = sorted(glob.iglob(os.path.join(map_dir, '*.png')), key=lambda x: 'large' not in x.lower())
+    preview = pics[0] if pics else None
+
+    return MapInfo(map_dir=map_dir, name=name, size=size, mass_markers=mass_markers, preview=preview)

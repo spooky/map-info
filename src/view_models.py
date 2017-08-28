@@ -9,6 +9,7 @@ class MainViewModel(QObject):
     map_size_changed = pyqtSignal(name='map_sizeChanged')
     map_name_changed = pyqtSignal(name='map_nameChanged')
     flip_changed = pyqtSignal(name='flipChanged')
+    preview_changed = pyqtSignal(name='previewChanged')
 
     def __init__(self, *args, **kwargs):
         self.map_info = None
@@ -17,6 +18,7 @@ class MainViewModel(QObject):
         self._map_size = 1
         self._map_name = None
         self._flip = False
+        self._preview = None
         super().__init__(*args, **kwargs)
         self.map_dir_changed.connect(self._on_map_dir_chaged)
 
@@ -70,6 +72,16 @@ class MainViewModel(QObject):
             self._flip = value
             self.flip_changed.emit()
 
+    @pyqtProperty(str, notify=preview_changed)
+    def preview(self):
+        return self._preview
+
+    @preview.setter
+    def preview(self, value):
+        if self._preview != value:
+            self._preview = value
+            self.preview_changed.emit()
+
     def _on_map_dir_chaged(self):
         url = QUrl(self.map_dir)
         map_dir = QDir(url.toLocalFile()).path()
@@ -77,6 +89,7 @@ class MainViewModel(QObject):
         self.map_size = round(max(self.map_info.size.w, self.map_info.size.h))
         self.map_name = '{} ({}x{})'.format(self.map_info.name, self.map_info.size.w, self.map_info.size.h)
         self.dot_size = self._get_dot_size()
+        self.preview = QUrl.fromLocalFile(self.map_info.preview).toString()
 
     def _get_dot_size(self):
         return min(150, self.map_size)
