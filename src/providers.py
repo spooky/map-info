@@ -14,12 +14,14 @@ class HeatmapProvider(QtQuick.QQuickImageProvider):
 
     def requestPixmap(self, id, size):
         url = QUrl(id)
+        query = QUrlQuery(url.query())
         map_dir = QDir(url.toLocalFile()).path()
-        dot_size = round(float(QUrlQuery(url.query()).queryItemValue('dot_size')))
-        should_flip = QUrlQuery(url.query()).queryItemValue('flip') in ['True', 'true']
+        dot_size = round(float(query.queryItemValue('dot_size')))
+        should_flip = query.queryItemValue('flip') in ['True', 'true']
+        opacity = round(float(query.queryItemValue('opacity')))
 
         try:
-            img, size = self._generate_heatmap(map_dir, dot_size)
+            img, size = self._generate_heatmap(map_dir, dot_size, opacity)
             if should_flip:
                 img = flip(img)
             p = QPixmap.fromImage(img.toqimage())
@@ -27,6 +29,6 @@ class HeatmapProvider(QtQuick.QQuickImageProvider):
         except Exception:
             return QPixmap(), QSize(-1, -1)
 
-    def _generate_heatmap(self, map_dir, dot_size):
+    def _generate_heatmap(self, map_dir, dot_size, opacity):
         map_info = get_map_info(map_dir)
-        return get_heatmap(map_info, dot_size), QSize(map_info.size.w, map_info.size.h)
+        return get_heatmap(map_info, dot_size, opacity), QSize(map_info.size.w, map_info.size.h)

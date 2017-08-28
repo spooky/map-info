@@ -57,9 +57,10 @@ ApplicationWindow {
             Image {
                 id: heatmapImage
                 anchors.fill: parent
-                source: mainViewModel.map_dir ? "image://heatmap/" + mainViewModel.map_dir + "?dot_size=" + dotSizeSlider.value + "&flip=" + mainViewModel.flip : ""
+                source: mainViewModel.map_dir ? "image://heatmap/" + mainViewModel.map_dir + "?dot_size=" + dotSizeSlider.value + "&flip=" + mainViewModel.flip + "&opacity=" + opacitySlider.value: ""
                 fillMode: Image.PreserveAspectFit
-                opacity: opacitySlider.value
+                antialiasing: true
+                smooth: true
                 visible: false
             }
             Image {
@@ -67,6 +68,8 @@ ApplicationWindow {
                 anchors.fill: parent
                 source: mainViewModel.preview ? mainViewModel.preview : ""
                 fillMode: Image.PreserveAspectFit
+                antialiasing: true
+                smooth: true
                 visible: false
             }
         }
@@ -86,7 +89,7 @@ ApplicationWindow {
             Slider {
                 id: dotSizeSlider
                 from: 1
-                to: mainViewModel.map_size
+                to: mainViewModel.map_size / 2
                 value: mainViewModel.dot_size
                 stepSize: 1
                 snapMode: Slider.SnapAlways
@@ -105,9 +108,9 @@ ApplicationWindow {
             Slider {
                 id: opacitySlider
                 from: 0
-                to: 1
-                stepSize: 0.01
-                value: 1
+                to: 255
+                stepSize: 1
+                value: 200
 
                 Layout.fillWidth: true
             }
